@@ -1,0 +1,12 @@
+[Event "?"]
+[Site "?"]
+[Date "2021.07.10"]
+[Round "?"]
+[White "Enter New Game"]
+[Black "?"]
+[Result "*"]
+[ECO "B17"]
+[PlyCount "7"]
+
+{ Error: 0.05% } 1. e4 c6 2. d4 d5 3. Nd2 g6 4. e5 *
+

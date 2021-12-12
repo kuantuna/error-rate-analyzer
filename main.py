@@ -63,31 +63,31 @@ def main():
             if board.is_game_over():
                 print("Game is over, please check provided start move number")
                 break
-            if board.ply() < start_ply: continue
-            if board.turn == color:
-                best_move_analysis = engine.analyse(board, chess.engine.Limit(time=analysis_time))
-                best_move = best_move_analysis["pv"][0]
-                best_move_expectation = best_move_analysis["score"].wdl().pov(color).expectation()*100
+            if (board.ply() < start_ply) or (board.turn != color): continue
 
-                current_move = node[0].move
-                board.push(current_move)
-                current_move_analysis = engine.analyse(board, chess.engine.Limit(time=analysis_time))
-                current_move_expectation = current_move_analysis["score"].wdl().pov(color).expectation()*100
-                board.pop()
+            best_move_analysis = engine.analyse(board, chess.engine.Limit(time=analysis_time))
+            best_move = best_move_analysis["pv"][0]
+            best_move_expectation = best_move_analysis["score"].wdl().pov(color).expectation()*100
 
-                error = calculate_error_for_move(current_move, best_move, current_move_expectation, best_move_expectation)
-                if error >= error_log_threshold:
-                    log_to_pgn(node, current_move, best_move, current_move_expectation, best_move_expectation, error)
+            current_move = node[0].move
+            board.push(current_move)
+            current_move_analysis = engine.analyse(board, chess.engine.Limit(time=analysis_time))
+            current_move_expectation = current_move_analysis["score"].wdl().pov(color).expectation()*100
+            board.pop()
 
-                evaluation_list.append({
-                    "move_number": round_up(node.ply()/2), 
-                    "best_move": best_move, 
-                    "current_move": current_move,
-                    "best_move_exp": best_move_expectation,
-                    "current_move_exp": current_move_expectation,
-                    "error": error
-                })
-                print(game)
+            error = calculate_error_for_move(current_move, best_move, current_move_expectation, best_move_expectation)
+            if error >= error_log_threshold:
+                log_to_pgn(node, current_move, best_move, current_move_expectation, best_move_expectation, error)
+
+            evaluation_list.append({
+                "move_number": round_up(node.ply()/2), 
+                "best_move": best_move, 
+                "current_move": current_move,
+                "best_move_exp": best_move_expectation,
+                "current_move_exp": current_move_expectation,
+                "error": error
+            })
+            print(game)
 
         game.variations[0].starting_comment = "Error: {}%".format(calculate_error_for_game(evaluation_list))
         print(game, file=open("./output/test-analysis.pgn", "w"), end="\n\n")
