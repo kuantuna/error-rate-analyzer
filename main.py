@@ -9,7 +9,7 @@ color_list = [chess.WHITE, chess.BLACK] # Notes that I was white on the first ga
 start_move_number_numbers = [2, 3]  # Notes that I want to start analyzing the game with the fifth move
 analysis_time = 10  # seconds
 evaluation_list = []
-error_log_threshold = 5
+error_log_threshold = 0
 
 def round_up(value):
     return int(value) + (value % 1 > 0)
